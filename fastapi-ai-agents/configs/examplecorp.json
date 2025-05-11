@@ -1,0 +1,23 @@
+{
+  "business_id": "examplecorp",
+  "custom_prompt": "You are a marketing assistant for Example Corp, providing insights and support for marketing strategies.",
+  "tone": "professional and friendly",
+  "tools": {
+    "enabled": [
+      "crm_tool",
+      "ad_analytics_tool",
+      "web_searcher"
+    ]
+  },
+  "memory": {
+    "type": "FAISS",
+    "config": {
+      "dimension": 768,
+      "index_path": "embeddings/examplecorp_index"
+    }
+  },
+  "additional_settings": {
+    "report_schedule": "daily",
+    "report_time": "09:00"
+  }
+}

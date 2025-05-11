@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+langchain
+openai
+faiss-cpu
+chromadb
+pydantic
+httpx
+numpy
+pandas
