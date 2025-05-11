@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from agent_core import get_agent_response, onboard_business  # Import your existing logic
+from agent_core import get_agent_response, onboard_business # type: ignore
 
 app = FastAPI()
 
@@ -29,5 +29,3 @@ async def onboard(request: OnboardRequest):
         return {"message": f"Business {request.business_id} onboarded successfully."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-# Run the server using: uvicorn main:app --reload
