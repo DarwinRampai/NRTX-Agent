@@ -1,44 +1,33 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import json
-import os
-from agent_core import initialize_agent
+from agent_core import get_agent_response, onboard_business  # Import your existing logic
 
 app = FastAPI()
 
+# Request model for the /chat endpoint
 class ChatRequest(BaseModel):
     user_input: str
     business_id: str
 
+# Request model for the /onboard endpoint
+class OnboardRequest(BaseModel):
+    business_id: str
+    config: dict
+
 @app.post("/chat")
 async def chat(request: ChatRequest):
-    business_id = request.business_id
-    user_input = request.user_input
-
-    config_path = f"configs/{business_id}.json"
-    
-    if not os.path.exists(config_path):
-        raise HTTPException(status_code=404, detail="Business configuration not found.")
-
-    with open(config_path) as config_file:
-        config = json.load(config_file)
-
-    agent = initialize_agent(config)
-    response = agent.handle_input(user_input)
-
-    return {"response": response}
+    try:
+        response = get_agent_response(request.business_id, request.user_input)
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/onboard")
-async def onboard(business_id: str, config: dict):
-    config_path = f"configs/{business_id}.json"
-    
-    if os.path.exists(config_path):
-        raise HTTPException(status_code=400, detail="Business already onboarded.")
+async def onboard(request: OnboardRequest):
+    try:
+        onboard_business(request.business_id, request.config)
+        return {"message": f"Business {request.business_id} onboarded successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    with open(config_path, 'w') as config_file:
-        json.dump(config, config_file)
-
-    # Initialize memory and tools for the new business here
-    # ...
-
-    return {"message": "Business onboarded successfully."}
+# Run the server using: uvicorn main:app --reload
