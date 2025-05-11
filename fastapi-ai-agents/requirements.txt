@@ -8,3 +8,4 @@ pydantic
 httpx
 numpy
 pandas
+langchain-community

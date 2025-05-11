@@ -1,3 +1,5 @@
+import sys
+print("Python Path:", sys.path)
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from agent_core import get_agent_response, onboard_business # type: ignore
